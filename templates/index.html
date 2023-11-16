@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>СловлиHelper</title>
+    <style>
+      body {
+        background-color: #2d2b3f;
+        text-align: center;
+        font-family: Garamond;
+        font-size: 18px;
+      }
+      h1 {
+        font-family: Arial;
+      }
+      table, th, td {
+        color: #b6b6b6;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .formtable {
+        text-align: right;
+      }
+      .forminfo {
+        text-align: center;
+      }
+      .forminput {
+        text-align: left;
+      }
+      .footer {
+        color: #1E202C;
+      }
+      .restable {
+        border: 2px solid;
+        text-align: left;
+      }
+    </style>
+</head>
+<body>
+<h1><span style="color:#f86baf;">Словли</span><span style="color:#3ab3f3;">Helper</span></h1>
+<form action="/search" method="get">
+    <table class="formtable">
+        <tr>
+            <td><label for="num_characters">Number of characters:</label></td>
+            <td class="forminput"><input type="number" id="num_characters" name="num_characters"></td>
+        </tr>
+        <tr>
+            <td><label for="letters">Letters in word:</label></td>
+            <td class="forminput"><input type="text" id="letters" name="letters"></td>
+        </tr>
+        <tr>
+            <td><label for="exclude">Letters not in word:</label></td>
+            <td class="forminput"><input type="text" id="exclude" name="exclude"></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="forminfo"><span>Letters should be all together without spaces, ex: абв. Order does not matter.</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="forminfo"><input type="submit" value="Search"></td>
+        </tr>
+    </table>
+</form>
+<br />
+<span id="resultTable"></span>
+<br/>
+<span class="footer">slovlihelper (at) gmаildotcom</span>
+</body>
+<script>
+function decodeHtml(html) {
+    var t = document.createElement("textarea");
+    t.innerHTML = html;
+    return t.value;
+}
+if ("{{result}}") {
+    res = JSON.parse(decodeHtml("{{result}}"));
+    let resTable = '<table class="restable"><tr><th>Word</th><th>Definition</th></tr>'
+    for (k in res) {
+        resTable += "<tr><td>";
+        resTable += JSON.stringify(k).slice(1,-1);
+        resTable += "</td><td>"
+        resTable += JSON.stringify(res[k]).slice(1,-1);
+        resTable += "</td></tr>";
+    };
+    resTable += "</table>";
+    document.getElementById("resultTable").innerHTML = resTable;
+};
+
+</script>
+</html>

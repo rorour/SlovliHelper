@@ -1,0 +1,1 @@
+web: flask --app slovli_helper.py run -p $PORT --host=0.0.0.0
