@@ -15,7 +15,7 @@ def home():
 
 @app.route("/search", methods=["GET"])
 def search():
-    q = _build_query(request.args["num_characters"], request.args["letters"], request.args["exclude"])
+    q = _build_query(request.args["num_characters"], request.args["letters"].lower(), request.args["exclude"].lower())
     connection = sqlite3.connect(DB_NAME)
     cursor = connection.cursor()
     r = cursor.execute(q).fetchall()
@@ -37,8 +37,8 @@ def _build_query(num_chars, letters, excluded):
 
 def main():
     n = int(input("How many characters? ") or 0)
-    l = input("Containing which letters? ").strip()
-    e = input("Excluding which letters? ").strip()
+    l = input("Containing which letters? ").strip().lower()
+    e = input("Excluding which letters? ").strip().lower()
     q = _build_query(n, l, e)
 
     connection = sqlite3.connect(DB_NAME)
