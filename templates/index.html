@@ -84,6 +84,14 @@ if ("{{result}}") {
     resTable += "</table>";
     document.getElementById("resultTable").innerHTML = resTable;
 };
-
+if ("{{ num_characters }}") {
+    document.getElementById("num_characters").value = "{{ num_characters }}"
+}
+if ("{{ letters }}") {
+    document.getElementById("letters").value = "{{ letters }}"
+}
+if ("{{ exclude }}") {
+    document.getElementById("exclude").value = "{{ exclude }}"
+}
 </script>
 </html>

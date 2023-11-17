@@ -23,7 +23,7 @@ def search():
     t = {}
     for w in r:
         t[w[0]] = w[2]
-    return render_template('index.html', result=json.dumps(t))
+    return render_template('index.html', result=json.dumps(t), num_characters=request.args["num_characters"], letters=request.args["letters"], exclude=request.args["exclude"])
 
 
 def _build_query(num_chars, letters, excluded):
