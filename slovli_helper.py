@@ -33,24 +33,3 @@ def _build_query(num_chars, letters, excluded):
     for e in excluded:
         q += f" AND NOT word LIKE '%{e}%'"
     return q
-
-
-def main():
-    n = int(input("How many characters? ") or 0)
-    l = input("Containing which letters? ").strip().lower()
-    e = input("Excluding which letters? ").strip().lower()
-    q = _build_query(n, l, e)
-
-    connection = sqlite3.connect(DB_NAME)
-    cursor = connection.cursor()
-    r = cursor.execute(q).fetchall()
-    connection.close()
-
-    print(f"{len(r)} results:")
-    for w in r:
-        print(f"{w[0]}: {w[2]}")
-
-
-if __name__ == "__main__":
-    # main()
-    pass
