@@ -15,15 +15,48 @@ def home():
 
 @app.route("/search", methods=["GET"])
 def search():
-    q = _build_query(request.args["num_characters"], request.args["letters"].lower(), request.args["exclude"].lower())
-    connection = sqlite3.connect(DB_NAME)
-    cursor = connection.cursor()
-    r = cursor.execute(q).fetchall()
-    connection.close()
     t = {}
-    for w in r:
-        t[w[0]] = w[2]
-    return render_template('index.html', result=json.dumps(t), num_characters=request.args["num_characters"], letters=request.args["letters"], exclude=request.args["exclude"])
+    if v := _valid_request(request):
+        q = _build_query(v["num_characters"], v["letters"], v["exclude"])
+        connection = sqlite3.connect(DB_NAME)
+        cursor = connection.cursor()
+        r = cursor.execute(q).fetchall()
+        connection.close()
+        for w in r:
+            t[w[0]] = w[2]
+        return render_template('index.html',
+                               result=json.dumps(t),
+                               num_characters=v["num_characters"],
+                               letters=v["letters"],
+                               exclude=v["exclude"]
+                               )
+    return render_template('index.html')
+
+
+def _valid_request(request):
+    try:
+        assert 0 < int(request.args["num_characters"]) < 50, "invalid value for num_characters"
+        assert type(request.args["letters"]) == str and 0 <= len(request.args["letters"]) <= 33, "invalid value for letters"
+        assert type(request.args["exclude"]) == str and 0 <= len(request.args["exclude"]) <= 33, "invalid value for exclude"
+    except Exception as e:
+        print(e)
+        return False
+    return {
+        "num_characters": request.args["num_characters"],
+        "letters": _safe_letters(request.args["letters"]),
+        "exclude": _safe_letters(request.args["exclude"]),
+    }
+
+
+def _safe_letters(string):
+    _ALPHABET_LOWER = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+    r = ""
+    for l in string:
+        l = l.lower()
+        if l in _ALPHABET_LOWER:
+            r += l
+    return r
+
 
 
 def _build_query(num_chars, letters, excluded):
