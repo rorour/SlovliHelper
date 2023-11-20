@@ -5,4 +5,5 @@ setup(
     author="Raven O'Rourke",
     url="https://slovlihelper-026c174eefe2.herokuapp.com",
     install_requires=["flask", "flask_cors", "Flask-Limiter"],
+    packages=[],
 )
