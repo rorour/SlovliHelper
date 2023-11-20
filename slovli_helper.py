@@ -32,4 +32,5 @@ def _build_query(num_chars, letters, excluded):
         q += f" AND word LIKE '%{l}%'"
     for e in excluded:
         q += f" AND NOT word LIKE '%{e}%'"
+    q += " LIMIT 50"
     return q
