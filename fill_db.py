@@ -20,12 +20,15 @@ for f in os.listdir(_SOURCE_DIR):
             _FIELDS = {}
             for i, field in enumerate(c.readline().split(_DELIMITER)):
                 _FIELDS[field.strip()] = i
-
             r = c.readline()
             while r:
                 r = r.split(_DELIMITER)
-                q = f'''INSERT INTO dictionary VALUES (\"{r[_FIELDS["bare"]].replace('"', '')}\", {len(r[_FIELDS["bare"]])}, \"{'(' + f[:-5] + ') ' + r[_FIELDS["translations_en"]].replace('"', '')}\")'''
+                q = f'''INSERT INTO dictionary VALUES (\"{r[_FIELDS["bare"]]}\", {len(r[_FIELDS["bare"]])}, \"{'(' + f[:-5] + ') ' + r[_FIELDS["translations_en"]].replace('"', '')}\")'''
                 cursor.execute(q)
+                if _FIELDS.get("pl_nom"):
+                    p = r[_FIELDS["pl_nom"]].replace("'", "").replace('"', '')
+                    q = f'''INSERT INTO dictionary VALUES (\"{p}\", {len(p)}, \"{'(' + f[:-5] + ') ' + '(pl.)' + r[_FIELDS["translations_en"]].replace('"', '')}\")'''
+                    cursor.execute(q)
                 r = c.readline()
         connection.commit()
 connection.close()
