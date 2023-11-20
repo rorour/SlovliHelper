@@ -1,11 +1,19 @@
 from flask import Flask, request, render_template
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import json
 import sqlite3
 
 DB_NAME = "slovlihelper.db"
 app = Flask(__name__)
 CORS(app)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["100 per minute"],
+    storage_uri="memory://",
+)
 
 
 @app.route("/")
@@ -36,8 +44,10 @@ def search():
 def _valid_request(request):
     try:
         assert 0 < int(request.args["num_characters"]) < 50, "invalid value for num_characters"
-        assert type(request.args["letters"]) == str and 0 <= len(request.args["letters"]) <= 33, "invalid value for letters"
-        assert type(request.args["exclude"]) == str and 0 <= len(request.args["exclude"]) <= 33, "invalid value for exclude"
+        assert type(request.args["letters"]) == str and 0 <= len(
+            request.args["letters"]) <= 33, "invalid value for letters"
+        assert type(request.args["exclude"]) == str and 0 <= len(
+            request.args["exclude"]) <= 33, "invalid value for exclude"
     except Exception as e:
         print(e)
         return False
@@ -56,7 +66,6 @@ def _safe_letters(string):
         if l in _ALPHABET_LOWER:
             r += l
     return r
-
 
 
 def _build_query(num_chars, letters, excluded):
